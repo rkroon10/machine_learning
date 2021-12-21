@@ -2,18 +2,38 @@ import sklearn
 import matplotlib.pyplot as plt
 import numpy as np
 import random
+from sklearn import model_selection
+from sklearn import linear_model
+
 
 #y = mx+b
 #F = 1.8*C + 32
 
 
-x = list(range(0,50)) # C
-y = [1.8*F +32 for F in x]  #F
-#y = [1.8*F +32 + random.randint(-3,3) for F in x]  #F
+x = list(range(0,10)) # C      Generates list of values from (0, X)
+#y = [1.8*F +32 for F in x]  #F      Generates y values
+y = [1.8*F +32 + random.randint(-3,3) for F in x]  #F plus random values
 
-print(f'X: {x}')
+print(f'X: {x}')  #This and next line just print the x and y values and make them look nice in the terminal
 print(f'Y: {y}')
 
 
-plt.plot(x,y,'-*r')
-plt.show()
+plt.plot(x,y,'-*r') #Creates plot from x and y data. Third argument deals with fromatting
+plt.show()  #shows plot
+
+x = np.array(x).reshape(-1,1) #This and the next line put the data into the required format for the model
+y = np.array(y).reshape(-1,1)
+
+xTrain, xTest, yTrain, yTest = model_selection.train_test_split(x,y, test_size=0.2)#Splits the x and y sets of data into test and train datasets. test_size sets the split ratios, stay below 0.3 for the split value
+#print(xTrain.shape)
+model = linear_model.LinearRegression() #Select model type
+model.fit(xTrain, yTrain)
+
+print(f'Coeffienct(s): {model.coef_}')
+print(f'Y Intercept: {model.intercept_}')
+
+
+accuracy = model.score(xTest, yTest) #shows accuacy of the model
+print(f' Accuracy: {round(accuracy*100,2)}')
+
+
